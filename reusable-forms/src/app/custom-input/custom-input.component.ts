@@ -1,5 +1,22 @@
-import { Component, Input, ElementRef, ViewChild, Self } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl, ValidationErrors, ValidatorFn, Validators, NG_VALIDATORS, NgControl } from "@angular/forms";
+import {
+  Component,
+  Input,
+  ElementRef,
+  ViewChild,
+  Self,
+  OnInit
+} from "@angular/core";
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+  NG_VALIDATORS,
+  NgControl
+} from "@angular/forms";
+import { SharedValidators } from '../validation/shared.validators';
 
 export interface Validator {
   validate(c: AbstractControl): ValidationErrors | null;
@@ -10,24 +27,15 @@ export interface Validator {
   selector: "custom-input",
   templateUrl: "./custom-input.component.html",
   styleUrls: ["./custom-input.component.css"],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: CustomInputComponent
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: CustomInputComponent,
-      multi: true
-    }
-  ]
+  providers: []
 })
-export class CustomInputComponent implements ControlValueAccessor, Validator {
+export class CustomInputComponent
+  implements ControlValueAccessor, Validator, OnInit {
   disabled;
   @ViewChild("input", { static: false }) input: ElementRef;
   @Input() type = "text";
   @Input() isRequired: boolean = false;
+  @Input() isPassword: boolean = false;
   @Input() pattern: string = null;
   @Input() label: string = null;
   @Input() placeholder: string;
@@ -35,6 +43,25 @@ export class CustomInputComponent implements ControlValueAccessor, Validator {
 
   constructor(@Self() public controlDir: NgControl) {
     this.controlDir.valueAccessor = this;
+  }
+
+  ngOnInit(): void {
+    const control = this.controlDir.control;
+    const validators: ValidatorFn[] = control.validator
+      ? [control.validator]
+      : [];
+    if (this.isRequired) {
+      validators.push(Validators.required);
+    }
+    if (this.isPassword) {
+      validators.push(SharedValidators.hasStrongPassword)
+    }
+    if (this.pattern) {
+      validators.push(Validators.pattern(this.pattern));
+    }
+
+    control.setValidators(validators);
+    control.updateValueAndValidity();
   }
 
   writeValue(obj: any): void {

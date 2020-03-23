@@ -1,0 +1,10 @@
+div>.alert,
+.alert-danger {
+    margin-top: 5px;
+    padding   : .30rem 1.25rem;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 1px #ccc;
+    border-color: #ccc;
+}
