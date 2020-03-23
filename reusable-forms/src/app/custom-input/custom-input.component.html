@@ -19,8 +19,10 @@
       <span class="required" *ngIf="isRequired">*</span>
     </label>
 
-    <span class="error" *ngIf="input && !input.valid && input.touched">{{
-      errorMsg
-    }}</span>
+    <span
+      class="error"
+      *ngIf="controlDir && !controlDir.control.valid && controlDir.control.touched"
+      >{{ errorMsg }}</span
+    >
   </div>
 </div>
