@@ -6,12 +6,12 @@
   <div class="input-group">
     <input
       class="form-control"
-      #input
+      [(ngModel)]="value"
       [type]="type"
-      (input)="onChange($event.target.value)"
       (blur)="onTouched()"
       [disabled]="disabled"
       [placeholder]="placeholder"
+      [readonly]="!!isReadOnly"
     />
     <div class="input-group-append">
       <span
@@ -24,9 +24,7 @@
   </div>
   <div
     class="alert alert-danger"
-    *ngIf="
-      controlDir && !controlDir.control.valid && !controlDir.control.pristine
-    "
+
   >
     {{ errorMsg }}
   </div>

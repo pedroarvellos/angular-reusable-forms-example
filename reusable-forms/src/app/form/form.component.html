@@ -6,31 +6,21 @@
         [placeholder]="'Name'"
         [validation]="[{ isRequired: true, msg: 'Name required.' }]"
         [label]="'User Name'"
-        [errorMsg]="'Name error.'"
         name="name"
         ngModel
       >
       </custom-input>
       <custom-input
         [placeholder]="'Email'"
-        [validation]="[{ isRequired: true, msg: 'Name required.' }, { isEmail: true, msg: 'Email invalid.' }]"
+        [validation]="[
+          { isRequired: true, msg: 'Email required.' },
+          { isEmail: true, msg: 'Email invalid.' }
+        ]"
         [label]="'User Email'"
-        [errorMsg]="'Email error.'"
         name="email"
         ngModel
       >
       </custom-input>
-      <!-- <custom-input
-        [placeholder]="'Password'"
-        [isRequired]="true"
-        [isPassword]="true"
-        [label]="'User Password'"
-        [type]="'password'"
-        [errorMsg]="'Password error.'"
-        name="password"
-        ngModel
-      >
-      </custom-input> -->
 
       <button
         class="btn btn-lg btn-primary btn-block"
