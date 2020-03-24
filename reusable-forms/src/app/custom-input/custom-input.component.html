@@ -6,8 +6,8 @@
   <div class="input-group">
     <input
       class="form-control"
-      [type]="type"
       #input
+      [type]="type"
       (input)="onChange($event.target.value)"
       (blur)="onTouched()"
       [disabled]="disabled"

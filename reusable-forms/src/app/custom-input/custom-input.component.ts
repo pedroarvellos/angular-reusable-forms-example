@@ -16,7 +16,7 @@ import {
   NG_VALIDATORS,
   NgControl
 } from "@angular/forms";
-import { SharedValidators } from '../validation/shared.validators';
+import { SharedValidators } from "../validation/shared.validators";
 
 export interface Validator {
   validate(c: AbstractControl): ValidationErrors | null;
@@ -36,10 +36,12 @@ export class CustomInputComponent
   @Input() type = "text";
   @Input() isRequired: boolean = false;
   @Input() isPassword: boolean = false;
+  @Input() isEmail: boolean = false;
   @Input() pattern: string = null;
   @Input() label: string = null;
   @Input() placeholder: string;
-  @Input() errorMsg: string;
+  @Input() fieldName: string;
+  errorMsg: string;
 
   constructor(@Self() public controlDir: NgControl) {
     this.controlDir.valueAccessor = this;
@@ -50,14 +52,21 @@ export class CustomInputComponent
     const validators: ValidatorFn[] = control.validator
       ? [control.validator]
       : [];
+
     if (this.isRequired) {
       validators.push(Validators.required);
+      this.errorMsg = `${this.controlDir.name} is required.`;
     }
     if (this.isPassword) {
-      validators.push(SharedValidators.hasStrongPassword)
+      validators.push(SharedValidators.hasStrongPassword);
+      this.errorMsg =
+        "The password should contain lowercase, uppercase and numbers.";
     }
-    if (this.pattern) {
-      validators.push(Validators.pattern(this.pattern));
+    if (this.isEmail) {
+      validators.push(
+        Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}")
+      );
+      this.errorMsg = "Please, enter a valid email.";
     }
 
     control.setValidators(validators);
@@ -84,9 +93,18 @@ export class CustomInputComponent
     const validators: ValidatorFn[] = [];
     if (this.isRequired) {
       validators.push(Validators.required);
+      this.errorMsg = `${this.controlDir.name} is required.`;
     }
-    if (this.pattern) {
-      validators.push(Validators.pattern(this.pattern));
+    if (this.isPassword) {
+      validators.push(SharedValidators.hasStrongPassword);
+      this.errorMsg =
+        "The password should contain lowercase, uppercase and numbers.";
+    }
+    if (this.isEmail) {
+      validators.push(
+        Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}")
+      );
+      this.errorMsg = "Please, enter a valid email.";
     }
 
     return validators;
