@@ -13,7 +13,6 @@ import {
   ValidationErrors,
   ValidatorFn,
   Validators,
-  NG_VALIDATORS,
   NgControl
 } from "@angular/forms";
 import { SharedValidators } from "../validation/shared.validators";
@@ -34,14 +33,12 @@ export class CustomInputComponent
   disabled;
   @ViewChild("input", { static: false }) input: ElementRef;
   @Input() type = "text";
-  @Input() isRequired: boolean = false;
-  @Input() isPassword: boolean = false;
-  @Input() isEmail: boolean = false;
+  @Input() validation: any;
   @Input() pattern: string = null;
   @Input() label: string = null;
   @Input() placeholder: string;
   @Input() fieldName: string;
-  errorMsg: string;
+  @Input() errorMsg: string;
 
   constructor(@Self() public controlDir: NgControl) {
     this.controlDir.valueAccessor = this;
@@ -53,21 +50,20 @@ export class CustomInputComponent
       ? [control.validator]
       : [];
 
-    if (this.isRequired) {
-      validators.push(Validators.required);
-      this.errorMsg = `${this.controlDir.name} is required.`;
-    }
-    if (this.isPassword) {
-      validators.push(SharedValidators.hasStrongPassword);
-      this.errorMsg =
-        "The password should contain lowercase, uppercase and numbers.";
-    }
-    if (this.isEmail) {
-      validators.push(
-        Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}")
-      );
-      this.errorMsg = "Please, enter a valid email.";
-    }
+    this.validation.forEach(validationObject => {
+      if(validationObject.isRequired) {
+        validators.push(Validators.required);
+        this.errorMsg = validationObject.msg;
+      }
+      if(validationObject.isEmail) {
+        validators.push(Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}"));
+        this.errorMsg = validationObject.msg;
+      }
+      if(validationObject.isPassword) {
+        validators.push(SharedValidators.hasStrongPassword);
+        this.errorMsg = validationObject.msg;
+      }
+    })
 
     control.setValidators(validators);
     control.updateValueAndValidity();
@@ -91,21 +87,20 @@ export class CustomInputComponent
 
   validate(c: AbstractControl): ValidationErrors {
     const validators: ValidatorFn[] = [];
-    if (this.isRequired) {
-      validators.push(Validators.required);
-      this.errorMsg = `${this.controlDir.name} is required.`;
-    }
-    if (this.isPassword) {
-      validators.push(SharedValidators.hasStrongPassword);
-      this.errorMsg =
-        "The password should contain lowercase, uppercase and numbers.";
-    }
-    if (this.isEmail) {
-      validators.push(
-        Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}")
-      );
-      this.errorMsg = "Please, enter a valid email.";
-    }
+    this.validation.forEach(validationObject => {
+      if(validationObject.isRequired) {
+        validators.push(Validators.required);
+        this.errorMsg = validationObject.msg;
+      }
+      if(validationObject.isEmail) {
+        validators.push(Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}"));
+        this.errorMsg = validationObject.msg;
+      }
+      if(validationObject.isPassword) {
+        validators.push(SharedValidators.hasStrongPassword);
+        this.errorMsg = validationObject.msg;
+      }
+    })
 
     return validators;
   }

@@ -4,31 +4,33 @@
     <form (ngSubmit)="onSubmit(form.value)" #form="ngForm">
       <custom-input
         [placeholder]="'Name'"
-        [isRequired]="true"
+        [validation]="[{ isRequired: true, msg: 'Name required.' }]"
         [label]="'User Name'"
+        [errorMsg]="'Name error.'"
         name="name"
         ngModel
       >
       </custom-input>
       <custom-input
         [placeholder]="'Email'"
-        [isRequired]="true"
-        [isEmail]="true"
+        [validation]="[{ isRequired: true, msg: 'Name required.' }, { isEmail: true, msg: 'Email invalid.' }]"
         [label]="'User Email'"
+        [errorMsg]="'Email error.'"
         name="email"
         ngModel
       >
       </custom-input>
-      <custom-input
+      <!-- <custom-input
         [placeholder]="'Password'"
         [isRequired]="true"
         [isPassword]="true"
         [label]="'User Password'"
         [type]="'password'"
+        [errorMsg]="'Password error.'"
         name="password"
         ngModel
       >
-      </custom-input>
+      </custom-input> -->
 
       <button
         class="btn btn-lg btn-primary btn-block"
